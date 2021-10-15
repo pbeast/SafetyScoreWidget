@@ -9,6 +9,6 @@ In a couple of minutes you can get a nice widget with your safety score on the i
 
 # So what to do
 1. You have to install the Scriptable app from the [AppStore](https://apps.apple.com/us/app/scriptable/id1405459188?uo=4)
-2. [Safety Score Configurator](https://github.com/pbeast/SafetyScoreWidget/blob/main/Safety%20Score%20Configurator.scriptable)
-2. [Safety Score](https://github.com/pbeast/SafetyScoreWidget/blob/main/Safety%20Score.scriptable)
+2. [Safety Score Configurator](https://raw.githubusercontent.com/pbeast/SafetyScoreWidget/blob/main/Safety%20Score%20Configurator.scriptable)
+2. [Safety Score](https://raw.githubusercontent.com//pbeast/SafetyScoreWidget/blob/main/Safety%20Score.scriptable)
 
