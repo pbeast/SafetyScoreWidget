@@ -1,5 +1,6 @@
-
-![Widget Screenshot](https://github.com/pbeast/SafetyScoreWidget/blob/main/widget.jpeg)
+<p align="center">
+  ![Widget Screenshot](https://github.com/pbeast/SafetyScoreWidget/blob/main/widget.jpeg)
+</p>
 # Safety Score Widget
 [Scriptable](https://scriptable.app) scripts to display current safety score
 
