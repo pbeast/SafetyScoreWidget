@@ -146,8 +146,8 @@ async function run() {
   vehicleState.safetyScore = scoreResponse.rangeAggregation.metrics.safetyScore;
 
   var change = vehicleState.lastChange;
-  if (previousScore != scoreResponse.rangeAggregation.metrics.safetyScore) {
-    change = scoreResponse.rangeAggregation.metrics.safetyScore - previousScore;
+  if (previousScore != vehicleState.safetyScore) {
+    change = vehicleState.safetyScore - previousScore;
     vehicleState.lastChange = change;
     state[VIN] = vehicleState;
     fm.writeString(statePath, JSON.stringify(state));
@@ -167,7 +167,7 @@ async function run() {
 
   hStack.addSpacer();
 
-  let text = hStack.addText(scoreResponse.rangeAggregation.metrics.safetyScore.toString());
+  let text = hStack.addText(vehicleState.safetyScore.toString());
   text.centerAlignText();
   text.textColor = Color.white();
   text.shadowColor = Color.blue();
@@ -181,14 +181,13 @@ async function run() {
   deviationStack.spacing = 0;
   deviationStack.addSpacer();
 
-  if (previousScore != scoreResponse.rangeAggregation.metrics.safetyScore) {
+  if (previousScore != vehicleState.safetyScore) {
     Notification.removeDelivered(["safetyScore"]);
     Notification.removePending(["safetyScore"]);
 
     const notification = new Notification();
     const changeText = change > 0 ? "increased" : "decreased";
-    notification.body =
-      "Your safety score " + changeText + " by " + Math.abs(scoreResponse.rangeAggregation.metrics.safetyScore - previousScore).toString() + " points";
+    notification.body = "Your safety score " + changeText + " by " + Math.abs(vehicleState.safetyScore - previousScore).toString() + " points";
     notification.identifier = "safetyScore";
     notification.schedule();
   }
