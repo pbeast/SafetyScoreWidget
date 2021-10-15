@@ -1,6 +1,7 @@
 
-<img align="center" width="100" height="100" src="https://github.com/pbeast/SafetyScoreWidget/blob/main/widget.jpeg">
-
+<p align="center">
+  <img align="center" width="150" height="150" src="https://github.com/pbeast/SafetyScoreWidget/blob/main/widget.jpeg">
+</p>
 # Safety Score Widget
 [Scriptable](https://scriptable.app) scripts to display current safety score
 
