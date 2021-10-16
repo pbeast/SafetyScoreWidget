@@ -21,5 +21,3 @@ In a couple of minutes you can get a nice widget with your safety score on the i
 ![Widget Screenshot](https://github.com/pbeast/SafetyScoreWidget/blob/main/images/edit_widget.jpeg.jpeg)
 ![Widget Screenshot](https://github.com/pbeast/SafetyScoreWidget/blob/main/images/safety_score_select.jpeg)
 8. Enjoy your Safety Score on the screen. 🎉
-
-
