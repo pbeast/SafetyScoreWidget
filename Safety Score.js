@@ -62,21 +62,21 @@ async function run() {
     await fm.downloadFileFromiCloud(configPath);
   }
   const configText = fm.readString(configPath);
-  var config = JSON.parse(configText);
+  var widgetConfig = JSON.parse(configText);
 
   var vehicleIdx = 0;
   if (args.widgetParameter != undefined) {
-    vehicleIdx = parseInt(args.widgetParameter);
+    vehicleIdx = parseInt(args.widgetParameter) - 1;
   }
 
-  if (vehicleIdx >= config.count) {
-    await showErrorMessage(widget, "There is no vehicle with index " + vehicleIdx);
+  if (vehicleIdx >= widgetConfig.count) {
+    await showErrorMessage(widget, "There is no vehicle with index " + args.widgetParameter);
     return;
   }
 
-  const refreshToken = config.refreshToken;
-  const vehicleName = config.vehicles[vehicleIdx].display_name;
-  const VIN = config.vehicles[vehicleIdx].vin;
+  const refreshToken = widgetConfig.refreshToken;
+  const vehicleName = widgetConfig.vehicles[vehicleIdx].display_name;
+  const VIN = widgetConfig.vehicles[vehicleIdx].vin;
   const TIMEZONE = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   var vehicleState = state.hasOwnProperty(VIN)
@@ -84,6 +84,7 @@ async function run() {
     : {
         safetyScore: 0,
         lastChange: 0,
+        totalMilesDriven: 0,
       };
 
   const authResponse = await request("https://auth.tesla.com/oauth2/v3/token", {
@@ -111,8 +112,8 @@ async function run() {
     return;
   }
 
-  config.refreshToken = refreshToken;
-  fm.writeString(configPath, JSON.stringify(config));
+  widgetConfig.refreshToken = refreshToken;
+  fm.writeString(configPath, JSON.stringify(widgetConfig));
 
   const scoreResponse = await request(
     "https://akamai-apigateway-vfx.tesla.com/safety-rating/daily-metrics?deviceLanguage=en&deviceCountry=US&vin=" + VIN + "&timezone=" + TIMEZONE,
@@ -143,43 +144,31 @@ async function run() {
   }
 
   var previousScore = vehicleState.safetyScore;
-  vehicleState.safetyScore = scoreResponse.rangeAggregation.metrics.safetyScore;
+  var previousTotalMilesDriven = vehicleState.totalMilesDriven;
 
-  var change = vehicleState.lastChange;
-  if (previousScore != vehicleState.safetyScore) {
-    change = vehicleState.safetyScore - previousScore;
-    vehicleState.lastChange = change;
+  vehicleState.safetyScore = scoreResponse.rangeAggregation.metrics.safetyScore;
+  
+  var change = 0;
+  var totalMilesDriven = 0;
+  for (var i = 0; i < scoreResponse.dailyAggregation.metrics.length; i++) {
+    var dayMetrics = scoreResponse.dailyAggregation.metrics[i];
+    totalMilesDriven += dayMetrics.milesDriven;
+  }
+
+  if (previousScore != vehicleState.safetyScore || previousTotalMilesDriven != totalMilesDriven) {
+    if (previousScore != vehicleState.safetyScore) {
+      change = vehicleState.safetyScore - previousScore;
+      vehicleState.lastChange = change;
+    }
+    vehicleState.totalMilesDriven = totalMilesDriven;
+
     state[VIN] = vehicleState;
     fm.writeString(statePath, JSON.stringify(state));
   }
 
-  let daysDriven = widget.addText(scoreResponse.dailyAggregation.metrics.length.toString() + " days");
-  daysDriven.centerAlignText();
-  daysDriven.textColor = Color.white();
-  daysDriven.shadowColor = Color.blue();
-  daysDriven.shadowOffset = new Point(2, 2);
-  daysDriven.shadowRadius = 4;
-  daysDriven.font = Font.blackRoundedSystemFont(14);
-
-  widget.addSpacer();
-
-  const hStack = widget.addStack();
-
-  hStack.addSpacer();
-
-  let text = hStack.addText(vehicleState.safetyScore.toString());
-  text.centerAlignText();
-  text.textColor = Color.white();
-  text.shadowColor = Color.blue();
-  text.shadowOffset = new Point(2, 2);
-  text.shadowRadius = 4;
-  text.font = Font.blackRoundedSystemFont(56);
-
-  const deviationStack = hStack.addStack();
-  deviationStack.layoutVertically();
-  deviationStack.centerAlignContent();
-  deviationStack.spacing = 0;
-  deviationStack.addSpacer();
+  if (change == 0 && previousTotalMilesDriven == totalMilesDriven) {
+    change = vehicleState.lastChange;
+  }
 
   if (previousScore != vehicleState.safetyScore) {
     Notification.removeDelivered(["safetyScore"]);
@@ -192,17 +181,55 @@ async function run() {
     notification.schedule();
   }
 
+  var fontSizeAdjustment = 0;
+  var scoreFontSizeAdjustment = 0;
+  if (config.widgetFamily == "large") {
+      fontSizeAdjustment = 20;
+      scoreFontSizeAdjustment = 40;
+  }
+
+
+  let daysDriven = widget.addText(scoreResponse.dailyAggregation.metrics.length.toString() + " days");
+  daysDriven.centerAlignText();
+  daysDriven.textColor = Color.white();
+  daysDriven.shadowColor = Color.blue();
+  daysDriven.shadowOffset = new Point(2, 2);
+  daysDriven.shadowRadius = 4;
+  daysDriven.font = Font.blackRoundedSystemFont(14 + fontSizeAdjustment);
+
+  widget.addSpacer();
+
+  const scoreRow = widget.addStack();
+  scoreRow.bottomAlignContent();
+  scoreRow.layoutHorizontally();
+  scoreRow.addSpacer();
+
+  let text = scoreRow.addText(vehicleState.safetyScore.toString());
+  text.centerAlignText();
+  text.textColor = Color.white();
+  text.shadowColor = Color.blue();
+  text.shadowOffset = new Point(2, 2);
+  text.shadowRadius = 4;
+  text.font = Font.blackRoundedSystemFont(56 + scoreFontSizeAdjustment);
+
   if (change != 0) {
+    const deviationStack = scoreRow.addStack();
+    deviationStack.layoutVertically();
+    deviationStack.topAlignContent();
+    deviationStack.spacing = -5;
+
     const arrow = deviationStack.addText(change > 0 ? "↑" : "↓");
     arrow.textColor = change > 0 ? Color.green() : Color.red();
-    arrow.font = Font.mediumMonospacedSystemFont(12);
+    arrow.font = Font.mediumMonospacedSystemFont(12 + fontSizeAdjustment);
     const sign = change > 0 ? "+" : "-";
     const diff = deviationStack.addText(sign + Math.abs(change).toString());
     diff.textColor = change > 0 ? Color.green() : Color.red();
-    diff.font = Font.mediumMonospacedSystemFont(12);
+    diff.font = Font.mediumMonospacedSystemFont(12 + fontSizeAdjustment);
   }
 
-  hStack.addSpacer();
+  scoreRow.addSpacer();
+
+  widget.addSpacer();
 
   let milesDriven = widget.addText(scoreResponse.rangeAggregation.metrics.milesDriven.toString() + " mi");
   milesDriven.centerAlignText();
@@ -210,9 +237,7 @@ async function run() {
   milesDriven.shadowColor = Color.blue();
   milesDriven.shadowOffset = new Point(2, 2);
   milesDriven.shadowRadius = 4;
-  milesDriven.font = Font.blackRoundedSystemFont(16);
-
-  widget.addSpacer();
+  milesDriven.font = Font.blackRoundedSystemFont(16 + fontSizeAdjustment);
 
   let textVehicleName = widget.addText(vehicleName);
   textVehicleName.centerAlignText();
@@ -220,16 +245,16 @@ async function run() {
   textVehicleName.shadowColor = Color.blue();
   textVehicleName.shadowOffset = new Point(2, 2);
   textVehicleName.shadowRadius = 4;
-  textVehicleName.font = Font.blackRoundedSystemFont(20);
+  textVehicleName.font = Font.blackRoundedSystemFont(20 + fontSizeAdjustment);
 
   widget.setPadding(12, 12, 12, 12);
 
-  if (!config.runsInWidget) {
+  if (!widgetConfig.runsInWidget) {
     widget.presentSmall();
   }
 
   Script.setWidget(widget);
   Script.complete();
-}
+  }
 
-await run();
+  await run();
