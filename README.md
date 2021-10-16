@@ -10,8 +10,8 @@ In a couple of minutes you can get a nice widget with your safety score on the i
 
 # So what to do
 1. Install the *Scriptable* app from the [AppStore](https://apps.apple.com/us/app/scriptable/id1405459188?uo=4)
-2. On the iPhone download [Safety Score Configurator](https://raw.githubusercontent.com/pbeast/SafetyScoreWidget/blob/main/Safety%20Score%20Configurator.scriptable) script. Import it into the *Scriptable* app.
-3. On the iPhone d [Safety Score](https://raw.githubusercontent.com//pbeast/SafetyScoreWidget/blob/main/Safety%20Score.scriptable) script. Import it into the Scriptable app.
+2. On the iPhone download [Safety Score Configurator](https://github.com/pbeast/SafetyScoreWidget/releases/download/0.1/Safety.Score.Configurator.scriptable) script. Import it into the *Scriptable* app.
+3. On the iPhone d [Safety Score](https://github.com/pbeast/SafetyScoreWidget/releases/download/0.1/Safety.Score.scriptable) script. Import it into the Scriptable app.
 4. Run the *Safety Score Configurator* inside of the *Scriptable* app. You will be asked for the Refresh Token; you can use the [Auth app for Tesla](https://apps.apple.com/us/app/auth-app-for-tesla/id1552058613) app or any other application or method to generate the token. Anyway, you need to paste the refresh token into the input field. When the script is finished, you will be presented with the "Widget configured" message box.
 5. Add scriptable widget to your iPhone screen
 
