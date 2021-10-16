@@ -14,11 +14,11 @@ In a couple of minutes you can get a nice widget with your safety score on the i
 3. Download [Safety Score](https://raw.githubusercontent.com//pbeast/SafetyScoreWidget/blob/main/Safety%20Score.scriptable). Import it into the Scriptable app.
 4. Run the *Safety Score Configurator* inside of the *Scriptable* app. You will be asked for the Refresh Token; you can use the [Auth app for Tesla](https://apps.apple.com/us/app/auth-app-for-tesla/id1552058613) or any other application or method to generate the token. Anyway, you need to paste the refresh token into the input field. When the script is finished, you will be presented with the "Widget configured" message box.
 5. Add scriptable widget to your iPhone screen.
-![Widget Screenshot](https://github.com/pbeast/SafetyScoreWidget/blob/main/images/add_widget_1.jpeg | width=100)
-![Widget Screenshot](https://github.com/pbeast/SafetyScoreWidget/blob/main/images/add_widget_2.jpeg | width=100)
+<img src="https://github.com/pbeast/SafetyScoreWidget/blob/main/images/add_widget_1.jpeg" width=100 />
+<img src="https://github.com/pbeast/SafetyScoreWidget/blob/main/images/add_widget_2.jpeg" width=100 />
 6. Long tap on the widget and select "Edit Widget" option. 
-![Widget Screenshot](https://github.com/pbeast/SafetyScoreWidget/blob/main/images/widget_menu.jpeg | width=100)
+<img src="https://github.com/pbeast/SafetyScoreWidget/blob/main/images/widget_menu.jpeg" width=100 />
 7. In the "Edit Widget" dialog, select 'Safety Score' for a Script. Optionally, if you have more than one vehicle, provide the vehicle index (1, 2, 3, ...) as a Parameter. If you omit that option, the first vehicle will be selected.
-![Widget Screenshot](https://github.com/pbeast/SafetyScoreWidget/blob/main/images/edit_widget.jpeg | width=100)
-![Widget Screenshot](https://github.com/pbeast/SafetyScoreWidget/blob/main/images/safety_score_select.jpeg | width=100)
+<img src="https://github.com/pbeast/SafetyScoreWidget/blob/main/images/edit_widget.jpeg" width=100 />
+<img src="https://github.com/pbeast/SafetyScoreWidget/blob/main/images/safety_score_select.jpeg" width=100 />
 8. Enjoy your Safety Score on the screen. 🎉
