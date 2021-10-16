@@ -15,7 +15,7 @@ In a couple of minutes, you can get a nice widget with your safety score on the 
 
 <img src="https://github.com/pbeast/SafetyScoreWidget/blob/main/images/add_widget_1.jpeg" width=150 />&nbsp;<img src="https://github.com/pbeast/SafetyScoreWidget/blob/main/images/add_widget_2.jpeg" width=150 />
 
-6. Long tap on the widget and select "Edit Widget" option. 
+6. Long tap on the widget and select the "Edit Widget" option. 
 
 <img src="https://github.com/pbeast/SafetyScoreWidget/blob/main/images/widget_menu.jpeg" width=150 />
 
